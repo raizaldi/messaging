@@ -1,68 +1,51 @@
-﻿//Import firebase libraries to the client
+//Import firebase libraries to the client
 
-importScripts('https://www.gstatic.com/firebasejs/3.5.0/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/3.5.0/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.4.1/firebase-messaging.js');
 
 // Firebase cloud messaging sender ID.
-firebase.initializeApp({
-    'messagingSenderId': '<SENDER-ID>'  //Firebase Project Sender ID ex:204146733640
-});
+var firebaseConfig = {
+  apiKey: "AIzaSyCwfgNaQ2tRgnB349Ku-oUd7x7tMuFrWEw",
+  authDomain: "fcmdealpos.firebaseapp.com",
+  projectId: "fcmdealpos",
+  storageBucket: "fcmdealpos.appspot.com",
+  messagingSenderId: "620560052202",
+  appId: "1:620560052202:web:e01023b8fa35c7aa4c4c93",
+  measurementId: "G-JWC03ZWN0P"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
 
 //Initialise firebase messaging
-const initMessaging = firebase.messaging();
-
+const messaging = firebase.messaging();
 
 //Background push notification handler. It fires up when the browser or web page in which push notification is activated are closed.
-initMessaging.setBackgroundMessageHandler(function (payload) {
-    console.log('Background message Received:', payload);
-    const notificationTitle = 'Notification Title';
-    const notificationOptions = {
-        body: 'Notification Body.',
-        icon: 'notification-icon.png'
+messaging.setBackgroundMessageHandler(function (payload) {
+    console.log(payload);
+    const notification=JSON.parse(payload);
+    const notificationOption={
+        body:notification.body,
+        icon:notification.icon,
+        click_action : notification.click_action,
     };
-    return self.registration.showNotification(notificationTitle,
-        notificationOptions);
+    return self.registration.showNotification(payload.notification.title,notificationOption);
 });
 
 //Displays incoming push notification
 self.addEventListener('push', function (event) {
 
-  console.log('Push Notification Received.');
-  console.log('Push Notification had this data: "${event.data.text()}"');
-    
     var eventData = event.data.text();
     var obj = JSON.parse(eventData); //Parse the received JSON object.
 
     const title = obj.notification.title;
     const options = {
         body: obj.notification.body, 
-        icon: 'notification-icon.png',
+        icon: obj.notification.icon,
         badge: 'notification-icon.png',
     };
 
     event.waitUntil(self.registration.showNotification(title, options));
 });
 
-//Take action when a user clicks on the received notification.
-self.addEventListener('notificationclick', function (event) {
 
-    event.notification.close();
 
-    event.waitUntil(
-      clients.openWindow('https://www.facebook.com/rakeshdadamatti')
-    );
-});
-
-//Push subscription change
-self.addEventListener('pushsubscriptionchange', function (event) {
-    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
-    event.waitUntil(
-      self.registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: applicationServerKey
-      })
-      .then(function (newSubscription) {
-          console.log('Push subscription is changed. New Subscription is: ', newSubscription);
-      })
-    );
-});
