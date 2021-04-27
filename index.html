@@ -5,85 +5,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase Push Messaging</title>
+    <title>OneSignal Push Messaging</title>
 </head>
 <body>
-    <h1>Firebase Push Messaging</h1>
-    <h3>My Token is:</h3>
-    <div id="token"></div>
-
-    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-messaging.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-   <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
-
+    <h1>Selamat datang dihalaman kami</h1>
+<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
 <script>
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  var firebaseConfig = {
-    apiKey: "AIzaSyCwfgNaQ2tRgnB349Ku-oUd7x7tMuFrWEw",
-    authDomain: "fcmdealpos.firebaseapp.com",
-    projectId: "fcmdealpos",
-    storageBucket: "fcmdealpos.appspot.com",
-    messagingSenderId: "620560052202",
-    appId: "1:620560052202:web:e01023b8fa35c7aa4c4c93",
-    measurementId: "G-JWC03ZWN0P"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const messaging = firebase.messaging();
-
-  messaging.requestPermission()
-    .then(function () {
-        let message = messaging.getToken();
-        console.log(message);
-        return message;
-    })
-    .then(function (token) {
-        console.log(token);
-        document.getElementById("token").innerHTML = token;
-        
-        var topicName="pushraizaldi";
-        var serverKey="AAAAkHxC7-o:APA91bEYnOhk2Hxzh8X6mlkIFLe7u6g7zJiT7BYTtKm5d-zmBTLJ9fu-wSEPK1MVQ5aEEJIRXB_EOqTX_HDVbV2PjpvDGJ0siwEvtcMHEtGdnx9SIJ3t2fRV4ghMyQroYxwrSDT_ObSB";
-        var url = 'https://iid.googleapis.com/iid/v1/'+ token +'/rel/topics/' + topicName;
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", url, true);
-        xhttp.setRequestHeader("Authorization", "key="+serverKey);
-        xhttp.send();
-
-        console.log("Topic registration is complete");
-    })
-    .catch(function (err) {
-        console.log('you dont have any permission.');
-    })
-
-
-messaging.onMessage(function (payload) {
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: payload.notification.icon,
-    };
-
-    console.log(notificationTitle);
-
-    if (!("Notification" in window)) {
-        console.log("This browser does not support system notifications");
-    }
-    else if (Notification.permission === "granted") {
-        var notification = new Notification(notificationTitle, notificationOptions);
-        notification.onclick = function (event) {
-            event.preventDefault(); // prevent the browser from focusing the Notification's tab
-            window.open(payload.notification.click_action, '_blank');
-            notification.close();
-        }
-    }
-});
-
-  firebase.analytics();
+  window.OneSignal = window.OneSignal || [];
+  OneSignal.push(function() {
+    OneSignal.init({
+      appId: "11ddf7e0-42ee-4900-81e7-10fb78d02b47",
+    });
+  });
 </script>
+    
 </body>
 </html>
